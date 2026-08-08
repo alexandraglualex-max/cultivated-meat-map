@@ -137,18 +137,26 @@ Full source links are in each entry's popup on the map and in `data.json`/`bans.
 
 ## Keeping the live site in sync with the automated updates
 
-The monthly refresh updates the files in this folder, but getting those changes onto
-your actual published URL still needs a deploy step. Decided approach: **Netlify CLI
-with a personal access token** — Netlify can deploy straight from this folder with one
-command (`netlify deploy --prod`), no GitHub involved. Once you generate a token
-(Netlify → User settings → Applications → New access token) and share it, that command
-gets added to the scheduled task itself so publishing happens automatically after every
-monthly refresh — genuinely zero manual steps from that point on. Not wired in yet;
-the token is the only thing missing.
+**This is wired up and live.** This folder is a git repo pushed to
+[github.com/alexandraglualex-max/cultivated-meat-map](https://github.com/alexandraglualex-max/cultivated-meat-map),
+and that repo is linked to the Netlify site as its deploy source. Every `git push` to
+`main` triggers an automatic Netlify build — no manual dragging, no CLI deploy command.
 
-Until then, either redeploy manually (drag this folder onto Netlify's manual-deploy
-page) after checking `last-update-log.md`, or connect a GitHub repo so pushes
-auto-deploy — either works as a stopgap.
+The Netlify CLI/personal-access-token approach originally planned here turned out not
+to work: Netlify's API is blocked by this environment's network allowlist, so Claude
+can't call it directly. GitHub-based deploy sidesteps that entirely, since Netlify's
+own servers pull from GitHub and do the deploy — Claude only ever needs to push code.
+
+The monthly scheduled task pushes automatically after each refresh (see its step 7).
+A GitHub token that can push to this one repo is stored at `.deploy-auth/github-token.txt`
+in this same folder — it's listed in `.gitignore` and `.netlifyignore`, so it's never
+committed to GitHub and never uploaded to Netlify even if someone drags this whole
+folder onto Netlify's manual-deploy page by mistake.
+
+**If you ever need to redeploy something yourself outside the monthly schedule:** just
+ask Claude to push, or run `git add -A && git commit -m "..." && git push` yourself if
+you have `git` and are authenticated to the repo — Netlify picks up any push to `main`
+within about a minute.
 
 ## Ideas for next steps (design/UI/access, as you build this out)
 
