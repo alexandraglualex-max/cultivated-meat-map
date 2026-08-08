@@ -1,0 +1,18 @@
+{
+  "fullBans": [
+    { "state": "Florida", "note": "First US state to ban sale & production (2024).", "sourceUrl": null, "sourceName": null },
+    { "state": "Alabama", "note": "Banned sale & production (2024).", "sourceUrl": null, "sourceName": null },
+    { "state": "Mississippi", "note": "Banned sale & manufacture.", "sourceUrl": null, "sourceName": null },
+    { "state": "Montana", "note": "Banned sale & manufacture.", "sourceUrl": null, "sourceName": null },
+    { "state": "Nebraska", "note": "First Midwestern state to ban (2025).", "sourceUrl": null, "sourceName": null },
+    { "state": "Indiana", "note": "Temporary two-year ban.", "sourceUrl": null, "sourceName": null },
+    { "state": "Texas", "note": "SB 261, signed June 20, 2025.", "sourceUrl": null, "sourceName": null }
+  ],
+  "restrictions": [
+    { "state": "Ohio", "note": "HB 10 (Dec 2025): labeling rules + bans purchases by schools/universities.", "sourceUrl": null, "sourceName": null },
+    { "state": "South Dakota", "note": "SB 124 (2026): five-year prohibition on sale, manufacture, and distribution.", "sourceUrl": null, "sourceName": null }
+  ],
+  "generalSourceUrl": "https://www.usnews.com/news/best-states/articles/2025-12-23/states-try-to-snuff-out-lab-grown-meat-before-it-really-starts",
+  "generalSourceName": "U.S. News & World Report (roundup covering entries without their own source)",
+  "lastVerified": "2026-08-06"
+}

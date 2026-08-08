@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cultivated Meat Map</title>
+<meta name="description" content="A sourced map of restaurants and retailers currently selling cultivated (lab-grown) chicken and salmon.">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+<link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.css" />
+<link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.Default.css" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --forest: #1b4332; --forest-deep: #10281d; --cream: #fffaf0;
+    --lime: #f4c93f; --coral: #ff6b4a; --sky: #4ecbc4; --lilac: #9b8cf2;
+    --ink: #1c1c1a; --muted: #6b6f68; --line: #e9e4d6;
+    --card-bg: #eef3ee;
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body { margin: 0; background: var(--cream); color: var(--ink); font-family: 'Inter', sans-serif; line-height: 1.6; }
+  h1, h2, h3, .display { font-family: 'Poppins', sans-serif; font-weight: 700; }
+  a { color: var(--forest); }
+  .wrap { max-width: 780px; margin: 0 auto; padding: 0 1.5rem; }
+
+  .hero { background: var(--forest); color: var(--cream); padding: 1.5rem 0 1.25rem; border-radius: 0 0 24px 24px; }
+  .hero .eyebrow { display: inline-block; background: var(--lime); color: var(--forest-deep); font-weight: 700; font-size: 0.72rem; padding: 0.28rem 0.75rem; border-radius: 999px; margin-bottom: 0.6rem; }
+  .hero h1 { font-size: clamp(1.7rem, 4vw, 2.4rem); margin: 0 0 0.4rem; line-height: 1.15; max-width: 620px; }
+  .hero p { max-width: 480px; font-size: 0.95rem; color: #d9e7dd; font-family: 'Inter', sans-serif; font-weight: 400; }
+  .stat-row { display: flex; flex-wrap: wrap; gap: 0.6rem; margin-top: 0.8rem; }
+  .stat-pill { background: rgba(255,255,255,0.1); border-radius: 14px; padding: 0.55rem 0.9rem; }
+  .stat-pill .n { font-family: 'Poppins', sans-serif; font-size: 1.15rem; font-weight: 700; color: var(--lime); }
+  .stat-pill .l { font-size: 0.7rem; color: #c7d8cc; }
+
+  .tabs-inner { display: flex; flex-wrap: wrap; gap: 0.6rem; padding: 1rem 1.5rem 0.5rem; max-width: 780px; margin: 0 auto; }
+  .tabs-inner a { display: inline-block; background: var(--card-bg); color: var(--forest); border: 2px solid var(--forest); border-radius: 14px; padding: 0.5rem 1rem; font-weight: 600; font-size: 0.85rem; text-decoration: none; white-space: nowrap; }
+  .tabs-inner a:hover { background: var(--forest); color: var(--cream); }
+
+  section { padding: 2rem 0; }
+  #map-section { padding-top: 0; }
+  .eyebrow-sm { display: inline-block; font-size: 0.78rem; font-weight: 700; color: var(--coral); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.5rem; }
+  h2 { font-size: 1.7rem; margin: 0 0 0.7rem; }
+  .lede { color: var(--muted); max-width: 560px; font-size: 1rem; }
+
+  .safety-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1rem; margin-top: 1.8rem; }
+  .safety-card { background: var(--card-bg); border-radius: 20px; padding: 1.3rem 1.4rem; border: 1px solid var(--line); }
+  .safety-card .icon { width: 36px; height: 36px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-family: 'Poppins', sans-serif; font-weight: 700; margin-bottom: 0.8rem; }
+  .icon-1 { background: #ffe1da; color: var(--coral); }
+  .icon-2 { background: #fff3cf; color: #a87a00; }
+  .icon-3 { background: #d9f2ef; color: #0f7a6e; }
+  .icon-4 { background: #ece7fc; color: #6552d6; }
+  .icon-5 { background: #ffe3e3; color: #c23a3a; }
+  .safety-card h3 { font-size: 1rem; margin: 0 0 0.4rem; }
+  .safety-card p { margin: 0; color: var(--muted); font-size: 0.9rem; }
+  .safety-source { margin-top: 1.3rem; font-size: 0.8rem; color: var(--muted); }
+
+  .chips { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 0.9rem; }
+  .chip-toggle { border: 2px solid var(--forest); background: var(--card-bg); color: var(--forest); padding: 0.4rem 1rem; border-radius: 999px; font-size: 0.85rem; font-weight: 600; cursor: pointer; font-family: inherit; }
+  .chip-toggle.active { background: var(--forest); color: var(--cream); }
+  #search-box { width: 100%; max-width: 340px; padding: 0.7rem 1rem; border: 2px solid var(--line); border-radius: 14px; margin-bottom: 0.9rem; font-family: inherit; font-size: 0.95rem; }
+
+  #map { height: 380px; border-radius: 22px; border: 2px solid var(--line); }
+
+  .cards-header { display: flex; justify-content: space-between; align-items: baseline; margin: 1.2rem 0 0.8rem; }
+  .cards-header span { color: var(--muted); font-size: 0.9rem; font-weight: 600; }
+  #cards-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 1rem; }
+  .loc-card { background: var(--card-bg); border-radius: 20px; padding: 1.2rem 1.3rem; cursor: pointer; border: 1px solid var(--line); transition: transform .12s; }
+  .loc-card:hover { transform: translateY(-2px); border-color: var(--forest); }
+  .loc-card-top { display: flex; gap: 0.4rem; margin-bottom: 0.7rem; }
+  .chip { font-size: 0.7rem; font-weight: 700; padding: 0.2rem 0.6rem; border-radius: 999px; background: var(--line); color: var(--ink); }
+  .loc-card h3 { margin: 0 0 0.2rem; font-size: 1.05rem; }
+  .loc-city { margin: 0 0 0.5rem; color: var(--coral); font-size: 0.83rem; font-weight: 600; }
+  .loc-note { margin: 0 0 0.7rem; font-size: 0.9rem; color: var(--muted); }
+  .loc-source { font-size: 0.82rem; font-weight: 600; }
+
+  .bans-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(210px, 1fr)); gap: 0.8rem; margin-top: 1.4rem; }
+  .ban-pill { background: var(--card-bg); border-radius: 16px; padding: 0.9rem 1.1rem; font-size: 0.85rem; border: 1px solid var(--line); }
+  .ban-pill strong { display: block; margin-bottom: 0.2rem; color: var(--coral); }
+  .ban-restr strong { color: #a87a00; }
+  .ban-pill span { color: var(--muted); }
+
+  .submit-box { background: var(--forest); border-radius: 24px; padding: 2.2rem 2rem; color: var(--cream); }
+  .submit-box h2 { color: var(--cream); }
+  form.tip { display: grid; gap: 0.9rem; max-width: 460px; }
+  form.tip label { font-size: 0.85rem; color: #c7d8cc; display: block; font-weight: 600; }
+  form.tip input, form.tip select, form.tip textarea { width: 100%; margin-top: 0.35rem; padding: 0.65rem 0.8rem; border: none; border-radius: 10px; font-family: inherit; }
+  form.tip button { background: var(--lime); color: var(--forest-deep); border: none; padding: 0.75rem 1.5rem; border-radius: 999px; cursor: pointer; font-weight: 700; width: fit-content; font-family: 'Poppins', sans-serif; }
+
+  footer { padding: 2.5rem 0; text-align: center; color: var(--muted); font-size: 0.82rem; }
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="wrap">
+    <span class="eyebrow">Updated August 2026</span>
+    <h1>Cultivated meat, mapped out.</h1>
+    <p>A sourced, honest map of the real restaurants and shops selling lab-grown chicken and salmon today.</p>
+    <div class="stat-row">
+      <div class="stat-pill"><div class="n" id="stat-active">—</div><div class="l">active locations</div></div>
+      <div class="stat-pill"><div class="n" id="stat-products">—</div><div class="l">product types</div></div>
+      <div class="stat-pill"><div class="n" id="stat-banned-states">—</div><div class="l">states restricting sale</div></div>
+    </div>
+  </div>
+</div>
+
+<nav class="tabs">
+  <div class="tabs-inner">
+    <a href="#map-section">Explore</a>
+    <a href="#locations">Locations</a>
+    <a href="#production">Who makes it</a>
+    <a href="#bans">Where it's banned</a>
+  </div>
+</nav>
+
+<section id="about">
+  <div class="wrap">
+    <span class="eyebrow-sm">What this is</span>
+    <h2>Meat, grown, not raised</h2>
+    <p class="lede">Cultivated (or "lab-grown") meat is animal muscle and fat tissue, grown from a small sample of living cells in a steel bioreactor instead of on a farm. The cells are fed nutrients so they multiply and form tissue, which is then harvested and shaped into cuts or blended with plant-based ingredients.</p>
+  </div>
+</section>
+
+<section id="map-section">
+  <div class="wrap">
+    <span class="eyebrow-sm">Explore</span>
+    <h2>Find a place near you</h2>
+    <div class="chips">
+      <button class="chip-toggle active" data-group="product" data-value="chicken">Chicken</button>
+      <button class="chip-toggle active" data-group="product" data-value="salmon">Salmon</button>
+      <button class="chip-toggle active" data-group="status" data-value="active">Currently serving</button>
+      <button class="chip-toggle active" data-group="status" data-value="stopped">Stopped serving</button>
+    </div>
+    <input type="text" id="search-box" placeholder="Search city or restaurant…">
+    <div id="map"></div>
+    <div class="cards-header" id="locations"><h2 style="margin:0; font-size:1.3rem;">Locations</h2><span><span id="cards-count">0</span> results</span></div>
+    <div id="cards-grid"></div>
+  </div>
+</section>
+
+<section id="production">
+  <div class="wrap">
+    <span class="eyebrow-sm">Behind the map</span>
+    <h2>Who makes it, and where it's produced</h2>
+    <p class="lede">A handful of companies grow the cultivated chicken and salmon featured on this map. Here's who they are and where their production facilities are.</p>
+    <div class="safety-grid">
+      <div class="safety-card"><div class="icon icon-1">1</div><h3>Wildtype — salmon</h3><p>San Francisco, CA. Produced at "the Fishery," a converted microbrewery in Dogpatch.</p></div>
+      <div class="safety-card"><div class="icon icon-2">2</div><h3>GOOD Meat (Eat Just) — chicken</h3><p>Alameda, CA (demo plant), plus a large-scale facility in Singapore.</p></div>
+      <div class="safety-card"><div class="icon icon-3">3</div><h3>Upside Foods — chicken</h3><p>Emeryville, CA (EPIC facility), plus a newer plant in Glenview, IL.</p></div>
+      <div class="safety-card"><div class="icon icon-4">4</div><h3>SuperMeat — chicken</h3><p>Ness Ziona, Israel. Non-commercial pilot plant next to its test restaurant.</p></div>
+      <div class="safety-card"><div class="icon icon-5">5</div><h3>Believer Meats — chicken (shut down)</h3><p>Built a large plant in Wilson, NC and won USDA approval in 2025, then ceased operations that year after a lawsuit, before reaching the market.</p></div>
+    </div>
+    <p class="safety-source">Sources: company sites, Green Queen, Food Dive, AgFunderNews.</p>
+  </div>
+</section>
+
+<section id="bans">
+  <div class="wrap">
+    <span class="eyebrow-sm">Policy context</span>
+    <h2>Where it's banned</h2>
+    <div class="bans-grid" id="bans-grid"></div>
+  </div>
+</section>
+
+<section id="submit">
+  <div class="wrap">
+    <div class="submit-box">
+      <span class="eyebrow" style="background: var(--lime); color: var(--forest-deep);">Help us grow this</span>
+      <h2>Know a place we're missing?</h2>
+      <form class="tip" name="location-tip" method="POST" data-netlify="true" netlify-honeypot="bot-field">
+        <input type="hidden" name="form-name" value="location-tip" />
+        <p style="position:absolute; left:-9999px;"><label>Don't fill this out: <input name="bot-field" /></label></p>
+        <label>Restaurant or store name<input type="text" name="name" required></label>
+        <label>City or address<input type="text" name="address" required></label>
+        <label>Source link<input type="url" name="source" required></label>
+        <button type="submit">Submit tip</button>
+      </form>
+    </div>
+  </div>
+</section>
+
+<footer class="wrap">
+  <p style="margin: 0 0 0.4rem;">Data compiled August 2026. Every pin cites its source. Availability changes fast — verify before visiting.</p>
+  <p style="margin: 0; color: var(--coral); font-weight: 600;">Made by Volkova</p>
+</footer>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js"></script>
+<script src="preview-common.js"></script>
+</body>
+</html>
