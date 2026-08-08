@@ -45,7 +45,8 @@
 
   .safety-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 0.8rem; margin-top: 1.8rem; }
   .safety-card { background: var(--card-bg); border-radius: 16px; padding: 1rem 1.1rem; border: 1px solid var(--line); }
-  .safety-card .icon { width: 30px; height: 30px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-family: 'Poppins', sans-serif; font-weight: 700; margin-bottom: 0.6rem; font-size: 0.9rem; }
+  .safety-card .icon { width: 30px; height: 30px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-family: 'Poppins', sans-serif; font-weight: 700; margin-bottom: 0.6rem; font-size: 0.9rem; overflow: hidden; }
+  .safety-card .icon img { width: 100%; height: 100%; object-fit: contain; background: #fff; }
   .icon-1 { background: #ffe1da; color: var(--coral); }
   .icon-2 { background: #fff3cf; color: #a87a00; }
   .icon-3 { background: #d9f2ef; color: #0f7a6e; }
@@ -148,12 +149,12 @@
     <h2>Who makes it, and where it's produced</h2>
     <p class="lede">A handful of companies grow the cultivated meat and seafood featured on this map. Here's who they are and where their production facilities are.</p>
     <div class="safety-grid">
-      <div class="safety-card"><div class="icon icon-1">1</div><h3>Wildtype — salmon</h3><p>San Francisco, CA. Produced at "the Fishery," a converted microbrewery in Dogpatch.</p></div>
-      <div class="safety-card"><div class="icon icon-2">2</div><h3>GOOD Meat (Eat Just) — chicken</h3><p>Alameda, CA (demo plant), plus a large-scale facility in Singapore.</p></div>
-      <div class="safety-card"><div class="icon icon-3">3</div><h3>Upside Foods — chicken</h3><p>Emeryville, CA (EPIC facility), plus a newer plant in Glenview, IL.</p></div>
-      <div class="safety-card"><div class="icon icon-4">4</div><h3>SuperMeat — chicken</h3><p>Ness Ziona, Israel. Non-commercial pilot plant next to its test restaurant.</p></div>
-      <div class="safety-card"><div class="icon icon-5">5</div><h3>Believer Meats — chicken (shut down)</h3><p>Built a large plant in Wilson, NC and won USDA approval in 2025, then ceased operations that year after a lawsuit, before reaching the market.</p></div>
-      <div class="safety-card"><div class="icon icon-1" style="background:#f0e2da; color:#8a5a44;">6</div><h3>Mission Barns — pork fat</h3><p>San Francisco, CA (cell cultivation) plus a Berkeley, CA processing site. First company cleared to sell cultivated pork anywhere; its cultivated fat is blended with plant protein into meatballs and bacon.</p></div>
+      <div class="safety-card"><div class="icon icon-1"><img src="https://logo.clearbit.com/wildtypefoods.com" alt="Wildtype logo" onerror="this.parentElement.textContent='W'; this.remove();"></div><h3>Wildtype — salmon</h3><p>San Francisco, CA. Produced at "the Fishery," a converted microbrewery in Dogpatch.</p></div>
+      <div class="safety-card"><div class="icon icon-2"><img src="https://logo.clearbit.com/goodmeat.co" alt="GOOD Meat logo" onerror="this.parentElement.textContent='G'; this.remove();"></div><h3>GOOD Meat (Eat Just) — chicken</h3><p>Alameda, CA (demo plant), plus a large-scale facility in Singapore.</p></div>
+      <div class="safety-card"><div class="icon icon-3"><img src="https://logo.clearbit.com/upsidefoods.com" alt="Upside Foods logo" onerror="this.parentElement.textContent='U'; this.remove();"></div><h3>Upside Foods — chicken</h3><p>Emeryville, CA (EPIC facility), plus a newer plant in Glenview, IL.</p></div>
+      <div class="safety-card"><div class="icon icon-4"><img src="https://logo.clearbit.com/supermeat.com" alt="SuperMeat logo" onerror="this.parentElement.textContent='S'; this.remove();"></div><h3>SuperMeat — chicken</h3><p>Ness Ziona, Israel. Non-commercial pilot plant next to its test restaurant.</p></div>
+      <div class="safety-card"><div class="icon icon-5"><img src="https://logo.clearbit.com/believermeats.com" alt="Believer Meats logo" onerror="this.parentElement.textContent='B'; this.remove();"></div><h3>Believer Meats — chicken (shut down)</h3><p>Built a large plant in Wilson, NC and won USDA approval in 2025, then ceased operations that year after a lawsuit, before reaching the market.</p></div>
+      <div class="safety-card"><div class="icon" style="background:#f0e2da; color:#8a5a44;"><img src="https://logo.clearbit.com/missionbarns.com" alt="Mission Barns logo" onerror="this.parentElement.textContent='M'; this.remove();"></div><h3>Mission Barns — pork fat</h3><p>San Francisco, CA (cell cultivation) plus a Berkeley, CA processing site. First company cleared to sell cultivated pork anywhere; its cultivated fat is blended with plant protein into meatballs and bacon.</p></div>
     </div>
     <p class="safety-source">Sources: company sites, Green Queen, Food Dive, AgFunderNews.</p>
   </div>
