@@ -42,14 +42,15 @@ Open `data.json` — it's a plain array, so add a new object anywhere inside the
 ```json
 {
   "id": "unique-slug",
-  "name": "Restaurant Name",
-  "product": "chicken",          // "chicken" or "salmon"
+  "name": "Restaurant or store name",
+  "product": "chicken",          // any cultivated meat type: "chicken", "salmon", "pork", etc. — not locked to a fixed list
   "company": "Company Name",
   "city": "City, State, Country",
   "address": "Street address",
   "lat": 00.0000,
   "lng": -00.0000,
   "status": "active",            // "active", "historical", or "pilot" (non-commercial test kitchen)
+  "venue": ["restaurant"],       // array: "restaurant", "retail" (grocery/supermarket), or both e.g. ["retail","restaurant"]
   "notes": "Short context.",
   "sourceUrl": "https://...",
   "sourceName": "Publication name",
@@ -58,6 +59,8 @@ Open `data.json` — it's a plain array, so add a new object anywhere inside the
 ```
 
 Get lat/lng from [latlong.net](https://www.latlong.net/) or by right-clicking the spot on Google Maps. Save the file, redeploy (or wait for auto-deploy if you're on Git-based deploys), and the new pin appears on the site. The hero stats ("N active locations," "N states restricting sale") are computed live from these files on page load — you never need to update a count by hand.
+
+The site scope is "cultivated meat" generally, not just chicken and salmon — pork (Mission Barns) was added August 2026 when it became the first cultivated product sold in a US supermarket chain (Sprouts). Add any new cultivated meat type the same way; the product filter chips and color-coding pick up new values automatically in `preview-common.js`'s `COLORS` map — add a line there for a genuinely new product type (e.g. beef, duck) so it gets a distinct color instead of falling back to gray.
 
 ## Adding or editing a banned/restricted state
 
