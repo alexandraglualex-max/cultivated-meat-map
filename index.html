@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Cultivated Meat Map</title>
-<meta name="description" content="A sourced map of restaurants and retailers currently selling cultivated (lab-grown) chicken and salmon.">
+<meta name="description" content="A sourced map of restaurants and grocery stores currently selling cultivated (lab-grown) meat — chicken, salmon, pork, and beyond.">
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.css" />
 <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.Default.css" />
@@ -96,7 +96,7 @@
   <div class="wrap">
     <span class="eyebrow">Updated August 2026</span>
     <h1>Cultivated meat, mapped out.</h1>
-    <p>A sourced, honest map of the real restaurants and shops selling lab-grown chicken and salmon today.</p>
+    <p>A sourced, honest map of the real restaurants and grocery stores selling lab-grown meat today — chicken, salmon, pork, and whatever's next.</p>
     <div class="stat-row">
       <div class="stat-pill"><div class="n" id="stat-active">—</div><div class="l">active locations</div></div>
       <div class="stat-pill"><div class="n" id="stat-products">—</div><div class="l">product types</div></div>
@@ -129,8 +129,11 @@
     <div class="chips">
       <button class="chip-toggle active" data-group="product" data-value="chicken">Chicken</button>
       <button class="chip-toggle active" data-group="product" data-value="salmon">Salmon</button>
+      <button class="chip-toggle active" data-group="product" data-value="pork">Pork</button>
       <button class="chip-toggle active" data-group="status" data-value="active">Currently serving</button>
       <button class="chip-toggle active" data-group="status" data-value="stopped">Stopped serving</button>
+      <button class="chip-toggle active" data-group="venue" data-value="restaurant">Restaurant</button>
+      <button class="chip-toggle active" data-group="venue" data-value="retail">Grocery store</button>
     </div>
     <input type="text" id="search-box" placeholder="Search city or restaurant…">
     <div id="map"></div>
@@ -143,13 +146,14 @@
   <div class="wrap">
     <span class="eyebrow-sm">Behind the map</span>
     <h2>Who makes it, and where it's produced</h2>
-    <p class="lede">A handful of companies grow the cultivated chicken and salmon featured on this map. Here's who they are and where their production facilities are.</p>
+    <p class="lede">A handful of companies grow the cultivated meat featured on this map. Here's who they are and where their production facilities are.</p>
     <div class="safety-grid">
       <div class="safety-card"><div class="icon icon-1">1</div><h3>Wildtype — salmon</h3><p>San Francisco, CA. Produced at "the Fishery," a converted microbrewery in Dogpatch.</p></div>
       <div class="safety-card"><div class="icon icon-2">2</div><h3>GOOD Meat (Eat Just) — chicken</h3><p>Alameda, CA (demo plant), plus a large-scale facility in Singapore.</p></div>
       <div class="safety-card"><div class="icon icon-3">3</div><h3>Upside Foods — chicken</h3><p>Emeryville, CA (EPIC facility), plus a newer plant in Glenview, IL.</p></div>
       <div class="safety-card"><div class="icon icon-4">4</div><h3>SuperMeat — chicken</h3><p>Ness Ziona, Israel. Non-commercial pilot plant next to its test restaurant.</p></div>
       <div class="safety-card"><div class="icon icon-5">5</div><h3>Believer Meats — chicken (shut down)</h3><p>Built a large plant in Wilson, NC and won USDA approval in 2025, then ceased operations that year after a lawsuit, before reaching the market.</p></div>
+      <div class="safety-card"><div class="icon icon-1" style="background:#f0e2da; color:#8a5a44;">6</div><h3>Mission Barns — pork fat</h3><p>San Francisco, CA (cell cultivation) plus a Berkeley, CA processing site. First company cleared to sell cultivated pork anywhere; its cultivated fat is blended with plant protein into meatballs and bacon.</p></div>
     </div>
     <p class="safety-source">Sources: company sites, Green Queen, Food Dive, AgFunderNews.</p>
   </div>

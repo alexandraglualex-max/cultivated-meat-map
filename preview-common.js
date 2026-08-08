@@ -7,7 +7,7 @@ L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
   attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>'
 }).addTo(map);
 
-const COLORS = { chicken: '#d97706', salmon: '#e0576b' };
+const COLORS = { chicken: '#d97706', salmon: '#e0576b', pork: '#8a5a44' };
 let allLocations = [];
 // Cluster group instead of a plain layer group — several locations (e.g. the
 // 3 Singapore entries, the 2 DC entries) sit close enough together that at
@@ -16,7 +16,8 @@ let allLocations = [];
 let markerLayer = L.markerClusterGroup({ maxClusterRadius: 45, spiderfyOnMaxZoom: true }).addTo(map);
 let markerById = {};
 
-const state = { product: new Set(['chicken', 'salmon']), status: new Set(['active', 'stopped']), query: '' };
+const state = { product: new Set(['chicken', 'salmon', 'pork']), status: new Set(['active', 'stopped']), venue: new Set(['restaurant', 'retail']), query: '' };
+const VENUE_LABEL = { restaurant: 'Restaurant', retail: 'Grocery store' };
 
 // Simplified 2-bucket status model for the UI: "active" is currently serving,
 // everything else (historical or pilot) reads as "stopped serving". The full
@@ -38,17 +39,21 @@ function makeIcon(product, status) {
 
 function popupHtml(loc) {
   const statusLabel = statusBucket(loc.status) === 'active' ? 'Currently serving' : 'Stopped serving';
-  return `<strong>${loc.name}</strong><br>${loc.company} — ${loc.product}<br>${loc.address}<br><em>${statusLabel}</em><br><a href="${loc.sourceUrl}" target="_blank" rel="noopener">Source: ${loc.sourceName}</a>`;
+  const venueLabel = (loc.venue || ['restaurant']).map(v => VENUE_LABEL[v] || v).join(' + ');
+  return `<strong>${loc.name}</strong><br>${loc.company} — ${loc.product}<br>${loc.address}<br><em>${statusLabel} · ${venueLabel}</em><br><a href="${loc.sourceUrl}" target="_blank" rel="noopener">Source: ${loc.sourceName}</a>`;
 }
 
 function cardHtml(loc) {
   const bucket = statusBucket(loc.status);
   const statusLabel = bucket === 'active' ? 'Active' : 'Stopped';
+  const venues = loc.venue || ['restaurant'];
+  const venueChips = venues.map(v => `<span class="chip chip-venue-${v}">${VENUE_LABEL[v] || v}</span>`).join('');
   return `
     <article class="loc-card" data-id="${loc.id}">
       <div class="loc-card-top">
         <span class="chip chip-${loc.product}">${loc.product}</span>
         <span class="chip chip-status-${bucket}">${statusLabel}</span>
+        ${venueChips}
       </div>
       <h3>${loc.name}</h3>
       <p class="loc-city">${loc.city}</p>
@@ -62,6 +67,8 @@ function applyFilters() {
   const filtered = allLocations.filter(loc => {
     if (!state.product.has(loc.product)) return false;
     if (!state.status.has(statusBucket(loc.status))) return false;
+    const venues = loc.venue || ['restaurant'];
+    if (!venues.some(v => state.venue.has(v))) return false;
     if (state.query && !(loc.name.toLowerCase().includes(state.query) || loc.city.toLowerCase().includes(state.query))) return false;
     return true;
   });
@@ -96,7 +103,8 @@ document.querySelectorAll('.chip-toggle').forEach(btn => {
   btn.addEventListener('click', () => {
     const group = btn.dataset.group;
     const val = btn.dataset.value;
-    const set = group === 'product' ? state.product : state.status;
+    const set = state[group];
+    if (!set) return;
     if (set.has(val)) { set.delete(val); btn.classList.remove('active'); }
     else { set.add(val); btn.classList.add('active'); }
     applyFilters();
